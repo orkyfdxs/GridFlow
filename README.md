@@ -53,3 +53,7 @@ When binding content:
 - If a panel disappears, one of its dividers has probably crossed another. Use **Which sliders?** to find it.
 - Don't edit the layer comments on GridFlow layers. Panels store their edge sliders there.
 - Panels sit at the bottom of the layer stack, as a background. Layers above them cover them.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
