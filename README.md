@@ -17,7 +17,7 @@ Tested with After Effects 2026.
 **Create Grid** adds a controller null (`GridFlow Ctrl`) and one shape-layer panel per cell. The controller holds:
 
 - `Col N` and `Row N` sliders: the grid lines, as a percentage of the comp (0 = left/top edge, 100 = right/bottom edge).
-- `Palette 1` to `Palette 5` colours. Each panel has its own `Palette` slider (1 to 5) to pick one.
+- `Palette 1` to `Palette 5` colours. Each panel has its own `Palette` slider (1 to 5) to pick one. A split gives the new panel the least-used colour, never the same one as the panel it came from.
 
 Panels are expression-bound to the sliders, so animating one line reflows every panel that touches it.
 

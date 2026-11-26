@@ -257,6 +257,31 @@
         return top + 1;
     }
 
+    // Palette slot (1..N) a panel currently uses, or 0 if it has no Palette slider.
+    function panelPalette(ly) {
+        var fx = ly.property("ADBE Effect Parade").property("Palette");
+        if (!fx) return 0;
+        var v = Math.round(fx.property(1).value);
+        return Math.max(1, Math.min(PALETTE.length, v));
+    }
+
+    // Least-used palette slot among the comp's panels (ignoring `skip`),
+    // never the same as `avoid`, so a split gives the new panel its own color.
+    function nextPaletteSlot(comp, skip, avoid) {
+        var counts = [], i, best = 0;
+        for (i = 0; i <= PALETTE.length; i++) counts.push(0);
+        for (i = 1; i <= comp.numLayers; i++) {
+            var ly = comp.layer(i);
+            if (i === skip.index || !isPanel(ly)) continue;
+            counts[panelPalette(ly)]++;
+        }
+        for (i = 1; i <= PALETTE.length; i++) {
+            if (i === avoid) continue;
+            if (best === 0 || counts[i] < counts[best]) best = i;
+        }
+        return best;
+    }
+
     function splitPanels(axis) { // "v" = vertical divider (left/right), "h" = horizontal (top/bottom)
         var comp = getComp();
         if (!comp) return;
@@ -297,7 +322,8 @@
                 sib.name = "GF Panel s" + k;
                 sib.comment = panelComment(sibToks);
                 applyPanelGeometry(sib, sibToks);
-                // sibling keeps the original panel's palette slot
+                sib.property("ADBE Effect Parade").property("Palette").property(1)
+                    .setValue(nextPaletteSlot(comp, sib, panelPalette(pnl)));
             }
         } catch (err) {
             alert(SCRIPT_NAME + " error: " + err.toString());
